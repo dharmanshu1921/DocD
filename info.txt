@@ -1,0 +1,151 @@
+python3 -m venv chatbotenv
+source chatbotenv/bin/activate
+deactivate
+
+SQl script
+
+
+-- Step 1: Create the database
+CREATE DATABASE IF NOT EXISTS PatientDataDB;
+USE PatientDataDB;
+
+-- Step 2: Create the `Demographics` table
+CREATE TABLE IF NOT EXISTS Demographics (
+    PatientID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Age INT,
+    Gender VARCHAR(50),
+    Ethnicity VARCHAR(100),
+    SocioEconomicStatus VARCHAR(50),
+    EducationLevel VARCHAR(50),
+    MaritalStatus VARCHAR(50),
+    LivingSituation VARCHAR(50),
+    PrimaryLanguage VARCHAR(50),
+    GeographicRegion VARCHAR(50),
+    InsuranceType VARCHAR(50)
+);
+
+-- Step 3: Create the `ClinicalNotes` table
+CREATE TABLE IF NOT EXISTS ClinicalNotes (
+    PatientID INT PRIMARY KEY,
+    Date DATE,
+    SubjectiveFindings TEXT,
+    ObjectiveFindings TEXT,
+    Assessment VARCHAR(255),
+    Plan TEXT,
+    PHQ_9 INT,
+    GAD_7 INT,
+    AUDIT INT,
+    DAST INT,
+    SeverityIndex VARCHAR(50),
+    FOREIGN KEY (PatientID) REFERENCES Demographics(PatientID)
+);
+
+-- Step 4: Create the `TreatmentData` table
+CREATE TABLE IF NOT EXISTS TreatmentData (
+    PatientID INT PRIMARY KEY,
+    MedicationPrescribed VARCHAR(100),
+    Dosage VARCHAR(50),
+    Frequency VARCHAR(50),
+    TherapyType VARCHAR(100),
+    ProgressNotes TEXT,
+    TherapyAttendanceRate VARCHAR(10),
+    SideEffects VARCHAR(100),
+    MedicationAdherence VARCHAR(50),
+    FOREIGN KEY (PatientID) REFERENCES Demographics(PatientID)
+);
+
+-- Step 5: Create the `AdministrativeRecords` table
+CREATE TABLE IF NOT EXISTS AdministrativeRecords (
+    PatientID INT PRIMARY KEY,
+    AppointmentDate DATE,
+    InsuranceProvider VARCHAR(100),
+    BillingStatus VARCHAR(50),
+    ReferralInformation VARCHAR(100),
+    AuthorizationStatus VARCHAR(50),
+    AppointmentHistory INT,
+    NoShowRate VARCHAR(10),
+    FOREIGN KEY (PatientID) REFERENCES Demographics(PatientID)
+);
+
+-- Step 6: Create the `EnvironmentalData` table
+CREATE TABLE IF NOT EXISTS EnvironmentalData (
+    PatientID INT PRIMARY KEY,
+    StressLevels VARCHAR(50),
+    SupportSystems VARCHAR(50),
+    TechnologyAccess VARCHAR(50),
+    WorkplaceStressors VARCHAR(100),
+    RecentLifeEvents VARCHAR(100),
+    FOREIGN KEY (PatientID) REFERENCES Demographics(PatientID)
+);
+
+-- Step 7: Create the `Metadata` table
+CREATE TABLE IF NOT EXISTS Metadata (
+    PatientID INT PRIMARY KEY,
+    RecordCreationTimestamp DATETIME,
+    DataSource VARCHAR(100),
+    DataCompletenessScore VARCHAR(10),
+    FOREIGN KEY (PatientID) REFERENCES Demographics(PatientID)
+);
+
+-- Insert data into the Demographics table
+INSERT INTO Demographics (PatientID, Name, Age, Gender, Ethnicity, SocioEconomicStatus, EducationLevel, MaritalStatus, LivingSituation, PrimaryLanguage, GeographicRegion, InsuranceType)
+VALUES 
+(1, 'Carolyn Hicks', 32, 'Male', 'African-American', 'Middle-class', "Associate's", 'Married', 'With Family', 'Spanish', 'Suburban', 'Private'),
+(2, 'Kenneth Thompson', 72, 'Female', 'African-American', 'Middle-class', "Master's", 'Divorced', 'Alone', 'Spanish', 'Rural', 'Public'),
+(3, 'Marc Morrison', 36, 'Non-Binary', 'Hispanic', 'Upper-middle-class', 'High School', 'Married', 'Alone', 'Mandarin', 'Rural', 'Public'),
+(4, 'Rebekah Wright', 46, 'Male', 'Hispanic', 'Middle-class', "Master's", 'Single', 'Alone', 'Mandarin', 'Rural', 'Uninsured'),
+(5, 'Paula Fletcher', 46, 'Non-Binary', 'Caucasian', 'Low-income', "Bachelor's", 'Married', 'Assisted Living', 'Hindi', 'Urban', 'Public');
+
+-- Insert data into the ClinicalNotes table
+INSERT INTO ClinicalNotes (PatientID, Date, SubjectiveFindings, ObjectiveFindings, Assessment, Plan, PHQ_9, GAD_7, AUDIT, DAST, SeverityIndex)
+VALUES 
+(1, '2024-02-19', 'Return wait answer people traditional I century indicate.', 'BP: 124/72, HR: 77, Wt: 129 lbs', 'Major Depressive Disorder', 'Introduce trauma-focused therapy', 0, 14, 37, 6, 'Moderate'),
+(2, '2024-05-22', 'City rest police hotel war fight other a and agree woman.', 'BP: 134/72, HR: 93, Wt: 179 lbs', 'Generalized Anxiety Disorder', 'Schedule therapy and prescribe SSRI', 18, 7, 24, 10, 'Mild'),
+(3, '2024-01-28', 'Oil speak Congress others in agent affect particularly.', 'BP: 137/81, HR: 77, Wt: 182 lbs', 'Generalized Anxiety Disorder', 'Increase monitoring and adjust medications', 22, 5, 19, 5, 'Mild'),
+(4, '2024-10-25', 'Professor exist relationship market them network successful after western seven identify research loss.', 'BP: 121/83, HR: 82, Wt: 209 lbs', 'PTSD', 'Start CBT and prescribe Sertraline', 13, 17, 14, 7, 'Severe'),
+(5, '2024-10-12', 'Though body whose area far generation those science discussion stuff boy someone.', 'BP: 134/90, HR: 63, Wt: 248 lbs', 'PTSD', 'Increase monitoring and adjust medications', 20, 17, 13, 8, 'Mild');
+
+-- Insert data into the TreatmentData table
+INSERT INTO TreatmentData (PatientID, MedicationPrescribed, Dosage, Frequency, TherapyType, ProgressNotes, TherapyAttendanceRate, SideEffects, MedicationAdherence)
+VALUES 
+(1, 'Bupropion', '29 mg', 'Daily', 'Trauma-focused Therapy', 'Term professional address why forward option foot cold only win low employee analysis.', '90%', 'None', 'High'),
+(2, 'Lithium', '24 mg', 'Daily', 'CBT', 'Send include address who bring sure remember laugh.', '88%', 'Mild drowsiness', 'Low'),
+(3, 'Sertraline', '50 mg', 'Daily', 'DBT', 'Draw why call daughter option part may front establish imagine finally them.', '85%', 'None', 'High'),
+(4, 'Lithium', '13 mg', 'Daily', 'Support Groups', 'Future born stage evidence red politics director.', '70%', 'Mild drowsiness', 'Moderate'),
+(5, 'Bupropion', '14 mg', 'Daily', 'Support Groups', 'Late participant gas poor customer left design group base change civil.', '65%', 'Mild drowsiness', 'Low');
+
+-- Insert data into the AdministrativeRecords table
+INSERT INTO AdministrativeRecords (PatientID, AppointmentDate, InsuranceProvider, BillingStatus, ReferralInformation, AuthorizationStatus, AppointmentHistory, NoShowRate)
+VALUES 
+(1, '2024-12-20', 'Ray-Barker', 'Pending', 'Specialist', 'Not Required', 10, '11%'),
+(2, '2024-12-05', 'Goodman LLC', 'Denied', 'Specialist', 'Required', 5, '20%'),
+(3, '2024-12-05', 'Hernandez-Moody', 'Paid', 'Specialist', 'Pending', 1, '9%'),
+(4, '2024-12-23', 'Bates PLC', 'Denied', 'Primary Care', 'Not Required', 6, '4%'),
+(5, '2024-12-04', 'Diaz, Gardner and Moreno', 'Pending', 'Primary Care', 'Required', 10, '10%');
+
+-- Insert data into the EnvironmentalData table
+INSERT INTO EnvironmentalData (PatientID, StressLevels, SupportSystems, TechnologyAccess, WorkplaceStressors, RecentLifeEvents)
+VALUES 
+(1, 'Low', 'Moderate', 'None', 'Overwork', 'Divorce'),
+(2, 'High', 'Weak', 'None', 'Unemployment', 'Job Loss'),
+(3, 'Low', 'Moderate', 'Smartphone', 'None', 'Divorce'),
+(4, 'Low', 'Weak', 'Smartphone', 'Overwork', 'Bereavement'),
+(5, 'Medium', 'Moderate', 'Internet', 'None', 'Divorce');
+
+-- Insert data into the Metadata table
+INSERT INTO Metadata (PatientID, RecordCreationTimestamp, DataSource, DataCompletenessScore)
+VALUES 
+(1, '1983-07-23T07:09:11', 'EHR Integration', '88%'),
+(2, '2020-06-27T16:07:53', 'EHR Integration', '94%'),
+(3, '2000-04-07T07:17:38', 'EHR Integration', '86%'),
+(4, '1993-07-24T21:19:37', 'EHR Integration', '86%'),
+(5, '2005-12-27T08:12:47', 'Auto-generated', '94%');
+
+SELECT * FROM Demographics;
+SELECT * FROM ClinicalNotes;
+SELECT * FROM TreatmentData;
+SELECT * FROM AdministrativeRecords;
+SELECT * FROM EnvironmentalData;
+SELECT * FROM Metadata;
+
